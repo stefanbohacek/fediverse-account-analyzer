@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "json2csv": "^5.0.7",
+    "mastodon": "^1.2.2"
+  }
+}
