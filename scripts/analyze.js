@@ -1,8 +1,8 @@
 console.log(`booting up...`);
 
 const fs = require('fs');
+const path = require('path');
 const { parse } = require('json2csv');
-
 
 const getUserInfo = (user) => {
     const userInfo = user.split('@');
@@ -20,25 +20,26 @@ const sortByIntKey = (array, key) => {
     });
 }
 
-
-const dir = fs.opendirSync('../data-full/')
+const dir = fs.opendirSync('../data/')
 let accounts = [], dirent;
 
 while ((dirent = dir.readSync()) !== null) {
-  const dataFile = fs.readFileSync(`../data-full/${dirent.name}`);
-  const data = JSON.parse(dataFile);
-//   console.log(data);
-
+  const fileName = `../data/${dirent.name}`;
+  if (path.extname(fileName) === '.json'){
+    const dataFile = fs.readFileSync(fileName);
+    const data = JSON.parse(dataFile);
     const info = {
-        username: data.username,
-        bot: data.bot,
-        created_at: data.created_at,
-        followers_count: parseInt(data.followers_count),
-        created_at: data.created_at,
-        last_status_at: data.last_status_at,
+      username: data.username,
+      bot: data.bot,
+      created_at: data.created_at,
+      followers_count: parseInt(data.followers_count),
+      created_at: data.created_at,
+      last_status_at: data.last_status_at,
     };
     accounts.push(info);
     // console.log(info);
+    // console.log(data);
+  }
 }
 
 dir.closeSync();
@@ -52,11 +53,8 @@ const fields = Object.keys(topFollowedAccounts[0]);
 try {
   const topFollowedAccountsCSV = parse(topFollowedAccounts, { fields });
   console.log(topFollowedAccountsCSV);
-  fs.writeFile(`../analysis.csv`, topFollowedAccountsCSV, (err) => {
+  fs.writeFile(`../analysis/analysis.csv`, topFollowedAccountsCSV, (err) => {
   });
 } catch (err) {
   console.error(err);
 }
-
-
-
